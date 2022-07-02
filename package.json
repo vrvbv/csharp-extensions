@@ -35,7 +35,17 @@
 				"command": "csharp-extensions.createInterface",
 				"title": "Create C# Interface"
 			}
-		]
+		],
+		"configuration": {
+			"title": "C# Extensions",
+			"properties": {
+				"csharp-extensions.customNamespace": {
+					"type": "string",
+					"default": null,
+					"description": "Custom namespace that will be used for file creation."
+				}
+			}
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
@@ -60,6 +70,7 @@
 		"typescript": "^4.7.2"
 	},
 	"dependencies": {
+		"fast-xml-parser": "^4.0.8",
 		"line-column": "^1.0.2"
 	}
 }
