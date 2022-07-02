@@ -1,10 +1,18 @@
 import * as vscode from 'vscode';
 import LineColumnFinder from 'line-column';
-import { TextEncoder } from 'util';
+import { XMLParser } from 'fast-xml-parser';
+import {
+    fileExists,
+    writeTextToFile,
+    openAndShowFile,
+    readTextFromFile,
+    getValueByKeyRecursive
+} from './utils';
 
 const CS = ".cs";
 const CURSOR_TAG = "${cursor}";
 const NAME_TAG = "${name}";
+const NAMESPACE_TAG = "${namespace}";
 
 export async function createClass(context: vscode.ExtensionContext, uri: vscode.Uri) {
     createFile(context, uri, "cs-class-template.tmpl");
@@ -24,8 +32,9 @@ async function createFile(context: vscode.ExtensionContext, uri: vscode.Uri, tem
     const name = getName(fileName);
     const newFileName = name + CS;
     let template = await getTemplateFileText(context.extension, templateName);
+    const namespace = await getNamespace();
     const cursorPosition = getCursorPosition(template);
-    template = performReplaces(template, name);
+    template = performReplaces(template, name, namespace);
 
     const newFilePath = uri ?? getRootFolder()?.uri;
     if (!newFilePath) {
@@ -43,33 +52,13 @@ async function createFile(context: vscode.ExtensionContext, uri: vscode.Uri, tem
     file.selection = new vscode.Selection(cursorPosition, cursorPosition);
 }
 
-function performReplaces(template: string, name: string): string {
-    // TODO also replace namespaces according to csproj
-    // TODO option to use custom namespace
-    template = template.replace(CURSOR_TAG, "");
-    return template.replace(NAME_TAG, name);
-}
-
-async function writeTextToFile(path: vscode.Uri, content: string): Promise<void> {
-    await vscode.workspace.fs.writeFile(path, new TextEncoder().encode(content));
-}
-
-async function fileExists(path: vscode.Uri): Promise<boolean> {
-    try {
-        await vscode.workspace.fs.stat(path);
-        return true;
-    } catch (e: any) {
-        if (e instanceof vscode.FileSystemError) {
-            return false;
-        } else {
-            throw e;
-        }
+function performReplaces(template: string, name: string, namespace: string | undefined): string {
+    if (namespace) {
+        template = template.replace(NAMESPACE_TAG, namespace);
     }
-}
-
-async function openAndShowFile(fileName: vscode.Uri): Promise<vscode.TextEditor> {
-    const openedFile = await vscode.workspace.openTextDocument(fileName);
-    return await vscode.window.showTextDocument(openedFile);
+    template = template.replace(NAME_TAG, name);
+    template = template.replace(CURSOR_TAG, "");
+    return template;
 }
 
 function getRootFolder(): vscode.WorkspaceFolder | null {
@@ -80,13 +69,28 @@ function getRootFolder(): vscode.WorkspaceFolder | null {
     return folders[0];
 }
 
+async function getNamespace(): Promise<string | undefined> {
+    const customNamespace = vscode.workspace
+        .getConfiguration("csharp-extensions")
+        .get("customNamespace") as string;
+    if (customNamespace) {
+        return customNamespace;
+    }
+    const csprojFiles = await vscode.workspace.findFiles("*.csproj");
+    const csprojPath = csprojFiles[0];
+    const csprojFile = await readTextFromFile(csprojPath);
+    const xmlDoc = new XMLParser().parse(csprojFile);
+    const rootNamespace = getValueByKeyRecursive(xmlDoc, "RootNamespace") as string;
+    return rootNamespace?.toString();
+}
+
 function getName(text: string): string {
     const hasExtension = text.substring(text.length - CS.length) === CS;
     return hasExtension ? text.replace(CS, "") : text;
 }
 
 async function getTemplateFileText(self: vscode.Extension<any>, templateName: string) {
-    // TODO allow custom templates + allow custom templates to be exposed from commands
+    // TODO allow custom templates + auto generate templates from command
     const templatePath = self.extensionPath + "/templates/" + templateName;
     const templateFile = await vscode.workspace.openTextDocument(templatePath);
     return templateFile.getText();

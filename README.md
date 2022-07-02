@@ -14,13 +14,6 @@ For example if there is an image subfolder under your extension project workspac
 
 ## Extension Settings
 
-### TODO
-
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
-
-For example:
-
 This extension contributes the following settings:
 
-* `myExtension.enable`: enable/disable this extension
-* `myExtension.thing`: set to `blah` to do something
+* `csharp-extensions.customNamespace`: Custom namespace that will be used for file creation
