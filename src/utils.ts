@@ -36,7 +36,7 @@ export async function fileExists(path: vscode.Uri): Promise<boolean> {
     }
 }
 
-export async function openAndShowFile(fileName: vscode.Uri): Promise<vscode.TextEditor> {
-    const openedFile = await vscode.workspace.openTextDocument(fileName);
+export async function openAndShowFile(path: vscode.Uri): Promise<vscode.TextEditor> {
+    const openedFile = await vscode.workspace.openTextDocument(path);
     return await vscode.window.showTextDocument(openedFile);
 }

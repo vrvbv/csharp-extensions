@@ -12,28 +12,40 @@
 	],
 	"activationEvents": [
 		"onCommand:csharp-extensions.createClass",
-		"onCommand:csharp-extensions.createInterface"
+		"onCommand:csharp-extensions.createInterface",
+		"onCommand:csharp-extensions.createCustomClassTemplate",
+		"onCommand:csharp-extensions.createCustomInterfaceTemplate"
 	],
 	"main": "./out/extension.js",
 	"contributes": {
 		"menus": {
 			"explorer/context": [
 				{
-					"command": "csharp-extensions.createClass"
+					"command": "csharp-extensions.createClass",
+					"group": "navigation@-1"
 				},
 				{
-					"command": "csharp-extensions.createInterface"
+					"command": "csharp-extensions.createInterface",
+					"group": "navigation@-1"
 				}
 			]
 		},
 		"commands": [
 			{
 				"command": "csharp-extensions.createClass",
-				"title": "Create C# Class"
+				"title": "New C# Class"
 			},
 			{
 				"command": "csharp-extensions.createInterface",
-				"title": "Create C# Interface"
+				"title": "New C# Interface"
+			},
+			{
+				"command": "csharp-extensions.createCustomClassTemplate",
+				"title": "C# Extensions: Create custom class template"
+			},
+			{
+				"command": "csharp-extensions.createCustomInterfaceTemplate",
+				"title": "C# Extensions: Create custom interface template"
 			}
 		],
 		"configuration": {
