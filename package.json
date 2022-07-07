@@ -3,6 +3,10 @@
 	"publisher": "my-extension",
 	"displayName": "C# Extensions",
 	"description": "Extensions for C#",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/vrvbv/csharp-extensions"
+	},
 	"version": "0.0.1",
 	"engines": {
 		"vscode": "^1.68.0"
