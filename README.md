@@ -8,10 +8,10 @@ This VSCode C# extension should help you speed up your workflow automating repet
 This extension adds new shortcuts for creating C# classes and interfaces.
 
 #### Class
-![Add C# Class](./repository-images/class-cut.mp4)
+![Add C# Class](./repository-images/create-class.webm)
 
 #### Interface
-![Add C# Interface](./repository-images/interface-cut.mp4)
+![Add C# Interface](./repository-images/create-interface.webm)
 
 ### Custom templates
 It's possible to specify a custom template for class and interface creation.
