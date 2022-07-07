@@ -22,8 +22,11 @@ Just press <kbd>Ctrl</kbd><kbd>⇧ Shift</kbd><kbd>P</kbd> on Windows/Linux or <
 And then the extension will generate a new template file in your `.vscode/csharp-extension/templates` folder.
 
 When reading your custom template file the extension will look for the following tags and replace them:
+
 **`${name}`:**  your class/interface name.
+
 **`${namespace}`:** your class/interface namespace. This is optional.
+
 **`${cursor}`:** where the text cursor will positioned when the file is created. This is optional.
 
 ---
